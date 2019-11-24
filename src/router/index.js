@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import SignUp from '../views/SignUp.vue'
+import AddEvent from '../views/AddEvent.vue'
+// import SignUp from '../views/SignUp.vue'
 import firebase from 'firebase'
 
 Vue.use(VueRouter)
@@ -10,30 +11,38 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '*',
-    redirect: '/login',
+    redirect: '/home',
   },
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/home',
   },
   {
     path: '/home',
     name: 'home',
     component: Home,
     meta: {
-      requiresAuth: true,
+      allowUnauth: true,
     },
   },
   {
     path: '/login',
     name: 'login',
     component: Login,
+    meta: {
+      allowUnauth: true,
+    },
   },
   {
-    path: '/sign-up',
-    name: 'signup',
-    component: SignUp,
+    path: '/addevent',
+    name: 'addevent',
+    component: AddEvent,
   },
+  // {
+  //   path: '/sign-up',
+  //   name: 'signup',
+  //   component: SignUp,
+  // },
 ]
 
 const router = new VueRouter({
@@ -44,10 +53,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAuth = to.matched.some(record => !record.meta.allowUnauth)
 
   if (requiresAuth && !currentUser) next('login')
-  else if (!requiresAuth && currentUser) next('home')
   else next()
 })
 

@@ -2,9 +2,12 @@ import Vue from 'vue'
 import firebase from 'firebase'
 import App from './App.vue'
 import router from './router'
+import Vuelidate from 'vuelidate'
 
 Vue.config.productionTip = false
 let app = null
+
+Vue.use(Vuelidate)
 
 // Initialize Firebase
 var firebaseConfig = {
